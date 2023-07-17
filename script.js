@@ -7,35 +7,53 @@ const game = (() => {
     []
   ];
 
-  function initialiseBoard(){
-    // populate grid with null
+  function initializeBoard(){
+    // populate grid with empty strings
     for (let row of board) {
       for(let i = 0; i < 3; i++){
         row.push(null);
       }
     }
   }
-  initialiseBoard();
+  initializeBoard();
 
-  function makeMove (symbol, row, col) {
-    let valid = (board[row][col] === null);
-
-    if(valid) {
-      board[row][col] = symbol;
+  function getEmptyCells(grid) {
+    let coordinates = [];
+    for (let row = 0; row < grid.length; row++) {
+      for (let col = 0; col < grid[row].length; col++) {
+        if (grid[row][col] === null) {
+          coordinates.push([row, col]);
+        }
+      }
     }
+    return coordinates;
   }
+
+  let emptyCells = getEmptyCells(board);
   
-  
-  return {board, initialiseBoard, makeMove};
+  return {board, initializeBoard, emptyCells};
 })();
 
-// player factory
+// Player factory
 const Player = (name, symbol, isHuman) => {
-  function play(row, col) {
-    game.makeMove(symbol, row, col);
-  }
-  return {name, symbol, isHuman, play};
-};
+  function makeMove(row, col) {
+    let coordinates = [row, col];
+    let valid = false;
 
-let user = Player("Ariel", "X", true);
-let computer = Player("Computer", "O", false);
+    if (isHuman) {
+      valid = game.emptyCells.some(cell => cell[0] === coordinates[0] && cell[1] === coordinates[1]);
+    } else {
+      coordinates[0] = Math.floor(Math.random() * 3);
+      coordinates[1] = Math.floor(Math.random() * 3);
+      valid = true; // Computer move is always considered valid
+    }
+
+    if (valid) {
+      game.board[coordinates[0]][coordinates[1]] = symbol;
+    }
+
+    return valid;
+  };
+
+  return { name, symbol, isHuman, makeMove };
+};
