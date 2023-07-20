@@ -8,7 +8,7 @@ const game = (() => {
   ];
 
   function initializeBoard(){
-    // populate grid with empty strings
+    // populate grid with null
     for (let row of board) {
       for(let i = 0; i < 3; i++){
         row.push(null);
@@ -30,30 +30,69 @@ const game = (() => {
   }
 
   let emptyCells = getEmptyCells(board);
+
+  function makeMove(coordinates, symbol) {
+    let [row, col] = coordinates;
+    let cell = board[row][col];
+    let valid = cell === null;
+
+    if (valid) {
+      cell = symbol;
+      emptyCells = getEmptyCells(board);
+    }
+
+    return valid;
+  }
+
+  // observer pattern
+  let observers = [];
+  function subscribe(observer) {
+    observers.push(observer);
+  }
+  function notify(){
+    for (const observer of observers) {
+      observer.update(board);
+    }
+  }
   
-  return {board, initializeBoard, emptyCells};
+  return {board, emptyCells, initializeBoard, makeMove, subscribe};
 })();
 
 // Player factory
 const Player = (name, symbol, isHuman) => {
-  function makeMove(row, col) {
-    let coordinates = [row, col];
-    let valid = false;
-
+  function makeMove([coordinates]) {
     if (isHuman) {
-      valid = game.emptyCells.some(cell => cell[0] === coordinates[0] && cell[1] === coordinates[1]);
+      if(coordinates.length === 2){
+        game.makeMove([coordinates], symbol);
+      } else {
+        console.warn("player.makeMove() can only be called with 2 elements in input array.")
+      }
     } else {
-      coordinates[0] = Math.floor(Math.random() * 3);
-      coordinates[1] = Math.floor(Math.random() * 3);
-      valid = true; // Computer move is always considered valid
+      let randomPick = Math.floor(Math.random() * game.emptyCells.length);
+      game.makeMove(
+        game.emptyCells[randomPick],
+        symbol
+      );
     }
-
-    if (valid) {
-      game.board[coordinates[0]][coordinates[1]] = symbol;
-    }
-
-    return valid;
   };
 
   return { name, symbol, isHuman, makeMove };
 };
+
+// controller logic
+const gameController = (() => {
+  function update(board) {
+    // call all methods again
+  }
+  return {update}
+})();
+game.subscribe(gameController);
+
+// view
+const gameView = (() => {
+  function update(board) {
+    // update DOM
+  }
+  return {update};
+})();
+game.subscribe(gameView);
