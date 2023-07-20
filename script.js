@@ -32,14 +32,14 @@ const Game = (() => {
 
   let emptyCells = getEmptyCells(board);
 
-  function makeMove(coordinates, symbol) {
-    let [row, col] = coordinates;
+  function makeMove(row, col, symbol) {
     let cell = board[row][col];
     let valid = cell === null;
 
     if (valid) {
-      cell = symbol;
+      board[row][col] = symbol;
       emptyCells = getEmptyCells(board);
+      notify();
     }
 
     return valid;
@@ -61,23 +61,7 @@ const Game = (() => {
 
 // Player factory
 const Player = (name, symbol, isHuman) => {
-  function makeMove([coordinates]) {
-    if (isHuman) {
-      if(coordinates.length === 2){
-        Game.makeMove([coordinates], symbol);
-      } else {
-        console.warn("player.makeMove() can only be called with 2 elements in input array.")
-      }
-    } else {
-      let randomPick = Math.floor(Math.random() * Game.emptyCells.length);
-      Game.makeMove(
-        Game.emptyCells[randomPick],
-        symbol
-      );
-    }
-  };
-
-  return { name, symbol, isHuman, makeMove };
+  return {name, symbol, isHuman};
 };
 const user = Player("Ariel", "X", true);
 const computer = Player("Computer", "O", false);
@@ -85,16 +69,34 @@ const computer = Player("Computer", "O", false);
 // controller logic
 const GameController = (() => {
   let currentPlayer;
+  let gameEnded = false;
 
   function startGame() {
     Game.initializeBoard();
     currentPlayer = user;
   }
 
+  function checkEndGame() {
+    // logic for terminating conditions
+  }
+
+  function userMove (row, col) {
+    if(gameEnded) return;
+    Game.makeMove(row, col, user.symbol);
+
+    // check for a win or draw
+    checkEndGame();
+
+    // Switch to computer's turn
+    currentPlayer = computer;
+  }
+
+  function computerMove() {}
+
   function update(board) {
     // call all methods again
   }
-  return {startGame, update}
+  return {update, startGame, userMove}
 })();
 Game.subscribe(GameController);
 
@@ -110,3 +112,4 @@ Game.subscribe(GameView);
 
 // test the start game method
 GameController.startGame();
+GameController.userMove(1, 1)
