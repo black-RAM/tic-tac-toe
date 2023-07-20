@@ -1,5 +1,5 @@
 // Game board factory IIFE, a singleton object
-const game = (() => {
+const Game = (() => {
   // board stored as a 2D array
   const board = [
     [],
@@ -14,8 +14,9 @@ const game = (() => {
         row.push(null);
       }
     }
+    emptyCells = getEmptyCells(board);
+    notify();
   }
-  initializeBoard();
 
   function getEmptyCells(grid) {
     let coordinates = [];
@@ -63,14 +64,14 @@ const Player = (name, symbol, isHuman) => {
   function makeMove([coordinates]) {
     if (isHuman) {
       if(coordinates.length === 2){
-        game.makeMove([coordinates], symbol);
+        Game.makeMove([coordinates], symbol);
       } else {
         console.warn("player.makeMove() can only be called with 2 elements in input array.")
       }
     } else {
-      let randomPick = Math.floor(Math.random() * game.emptyCells.length);
-      game.makeMove(
-        game.emptyCells[randomPick],
+      let randomPick = Math.floor(Math.random() * Game.emptyCells.length);
+      Game.makeMove(
+        Game.emptyCells[randomPick],
         symbol
       );
     }
@@ -78,21 +79,34 @@ const Player = (name, symbol, isHuman) => {
 
   return { name, symbol, isHuman, makeMove };
 };
+const user = Player("Ariel", "X", true);
+const computer = Player("Computer", "O", false);
 
 // controller logic
-const gameController = (() => {
+const GameController = (() => {
+  let currentPlayer;
+
+  function startGame() {
+    Game.initializeBoard();
+    currentPlayer = user;
+  }
+
   function update(board) {
     // call all methods again
   }
-  return {update}
+  return {startGame, update}
 })();
-game.subscribe(gameController);
+Game.subscribe(GameController);
 
 // view
-const gameView = (() => {
+const GameView = (() => {
   function update(board) {
     // update DOM
+    console.log(board);
   }
   return {update};
 })();
-game.subscribe(gameView);
+Game.subscribe(GameView);
+
+// test the start game method
+GameController.startGame();
