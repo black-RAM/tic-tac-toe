@@ -52,11 +52,11 @@ const Game = (() => {
   }
   function notify(){
     for (const observer of observers) {
-      observer.update(board);
+      observer.update(board, emptyCells);
     }
   }
   
-  return {board, emptyCells, initializeBoard, makeMove, subscribe};
+  return {board, emptyCells, getEmptyCells, initializeBoard, makeMove, subscribe};
 })();
 
 // Player factory
@@ -68,7 +68,7 @@ const computer = Player("Computer", "O", false);
 
 // controller logic
 const GameController = (() => {
-  let currentPlayer;
+  let currentPlayer = null;
   let gameEnded = false;
 
   function startGame() {
@@ -91,10 +91,43 @@ const GameController = (() => {
     currentPlayer = computer;
   }
 
-  function computerMove() {}
+  function computerMove() {
+    // Get the latest empty cells array and make the computer move
+    const emptyCells = [Game.emptyCells];
+    if (emptyCells.length === 0) {
+      // No empty cells left, end the game
+      gameEnded = true;
+      return;
+    }
 
+    const randomPick = Math.floor(Math.random() * emptyCells.length);
+    const [row, col] = emptyCells[randomPick];
+    Game.makeMove(row, col, computer.symbol);
+
+    // Check for a winner or a draw after the computer's move
+    checkEndGame();
+
+    // Switch to the next player (user)
+    currentPlayer = user;
+  }
+
+  function computerTurn() {
+    if (!gameEnded && currentPlayer === computer) {
+      setTimeout(() => {
+        computerMove();
+      }, 500); // Delay computer move for better user experience
+    }
+  }
+
+  // Observer pattern - store latest state
   function update(board) {
-    // call all methods again
+    Game.board = board;
+
+    // Update the emptyCells array with the latest coordinates
+    Game.emptyCells = Game.getEmptyCells(board);
+
+    // trigger computer's turn
+    computerMove();
   }
   return {update, startGame, userMove}
 })();
@@ -112,4 +145,4 @@ Game.subscribe(GameView);
 
 // test the start game method
 GameController.startGame();
-GameController.userMove(1, 1)
+GameController.userMove(1, 1);
