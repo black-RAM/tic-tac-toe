@@ -11,6 +11,7 @@ const Game = (() => {
         row.push(null);
       }
     }
+    notify();
   }
 
   function getEmptyCells() {
@@ -47,3 +48,72 @@ const Game = (() => {
 
   return { board, getEmptyCells, initialiseBoard, makeMove, subscribe };
 })();
+
+// player factory
+const Player = ((name, symbol, isHuman) => {
+  return {name, symbol, isHuman}
+});
+const user = Player("Ariel", "X", true);
+const computer = Player("Computer", "O", false);
+
+// Game Controller
+const GameController = (() => {
+  let currentPlayer = null;
+  let gameEnded = false;
+
+  function startGame () {
+    Game.initialiseBoard();
+    currentPlayer = user;
+  }
+
+  function userMove(row, col) {
+    if(gameEnded) return;
+
+    const validMove = Game.makeMove(row, col, currentPlayer.symbol);
+
+    if(validMove) {
+      checkEndGame();
+      currentPlayer = computer;
+      if (!gameEnded) {
+        setTimeout(computerMove, 500); // Delay computer move for 500 milliseconds
+      }
+    }
+  }
+
+  function computerMove() {
+    if(gameEnded || currentPlayer !== computer) return;
+
+    // play random coordinates from empty coordinates
+    const emptyCells = Game.getEmptyCells();
+    let randomPick = Math.floor(Math.random() * emptyCells.length);
+    let [row, col] = emptyCells[randomPick];
+    Game.makeMove(row, col, currentPlayer.symbol);
+
+    checkEndGame()
+
+    currentPlayer = user;
+  }
+
+  function checkEndGame() {
+    // Draw condition
+    const emptyCells = Game.getEmptyCells();
+    if (emptyCells.length === 0) {
+      gameEnded = true;
+      console.log("It's a draw!");
+    }
+  }
+
+  return {startGame, userMove};
+})();
+
+// Game View
+const GameView = (() => {
+  function update(board) {
+    console.log(board)
+  }
+  return {update};
+})()
+Game.subscribe(GameView)
+
+GameController.startGame();
+GameController.userMove(1, 1);
