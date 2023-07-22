@@ -94,7 +94,7 @@ const GameController = (() => {
     currentPlayer = user;
   }
 
-  function checkEndGame() {
+  function checkEndGame(board) {
     // Draw condition
     const emptyCells = Game.getEmptyCells();
     if (emptyCells.length === 0) {
@@ -103,7 +103,11 @@ const GameController = (() => {
     }
   }
 
-  return {startGame, userMove};
+  function update(board) {
+    checkEndGame();
+  }
+
+  return {startGame, userMove, update};
 })();
 
 // Game View
