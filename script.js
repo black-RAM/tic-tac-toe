@@ -53,6 +53,7 @@ const Game = (() => {
 const Player = ((name, symbol, isHuman) => {
   return {name, symbol, isHuman}
 });
+
 const user = Player("Ariel", "X", true);
 const computer = Player("Computer", "O", false);
 
@@ -72,7 +73,6 @@ const GameController = (() => {
     const validMove = Game.makeMove(row, col, currentPlayer.symbol);
 
     if(validMove) {
-      checkEndGame();
       currentPlayer = computer;
       if (!gameEnded) {
         setTimeout(computerMove, 500); // Delay computer move for 500 milliseconds
@@ -88,8 +88,6 @@ const GameController = (() => {
     let randomPick = Math.floor(Math.random() * emptyCells.length);
     let [row, col] = emptyCells[randomPick];
     Game.makeMove(row, col, currentPlayer.symbol);
-
-    checkEndGame()
 
     currentPlayer = user;
   }
@@ -109,6 +107,7 @@ const GameController = (() => {
 
   return {startGame, userMove, update};
 })();
+Game.subscribe(GameController);
 
 // Game View
 const GameView = (() => {
@@ -117,6 +116,7 @@ const GameView = (() => {
   }
   return {update};
 })()
+
 Game.subscribe(GameView)
 
 GameController.startGame();

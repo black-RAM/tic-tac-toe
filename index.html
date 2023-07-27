@@ -5,8 +5,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tic-Tac-Toe</title>
   <script src="script.js" defer></script>
-</head>/
+</head>
 <body>
-  
+  <h1>Tic-Tac-Toe</h1>
+  <form action="" id="user-symbol">
+    <button type="button">X</button>
+    <button type="button">O</button>
+  </form>
+  <main id="container">
+    <table class="board">
+      <tr>
+        <td class="cell" data-row="0" data-col="0"></td>
+        <td class="cell" data-row="0" data-col="1"></td>
+        <td class="cell" data-row="0" data-col="2"></td>
+      </tr>
+      <tr>
+        <td class="cell" data-row="1" data-col="0"></td>
+        <td class="cell" data-row="1" data-col="1"></td>
+        <td class="cell" data-row="1" data-col="2"></td>
+      </tr>
+      <tr>
+        <td class="cell" data-row="2" data-col="0"></td>
+        <td class="cell" data-row="2" data-col="1"></td>
+        <td class="cell" data-row="2" data-col="2"></td>
+      </tr>
+    </table>
+  </main>
+  <button type="button" id="reset">Restart</button>
 </body>
 </html>
