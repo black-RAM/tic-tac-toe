@@ -112,11 +112,17 @@ Game.subscribe(GameController);
 // Game View
 const GameView = (() => {
   function update(board) {
-    console.log(board)
+    // display board in DOM
+    let boardElement = document.querySelector(".board");
+    for (let row = 0; row < board.length; row++) {
+        for (let col = 0; col < board[row].length; col++) {
+          const cellElement = boardElement.rows[row].cells[col];
+          cellElement.textContent = board[row][col] || ""; // Set the symbol or an empty string if cell is null
+        }
+    }
   }
   return {update};
 })()
-
 Game.subscribe(GameView)
 
 GameController.startGame();
