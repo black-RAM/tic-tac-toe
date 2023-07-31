@@ -112,7 +112,9 @@ Game.subscribe(GameController);
 
 // Game View
 const GameView = (() => {
-  let gameTable = document.querySelector(".board");
+  const gameTable = document.querySelector(".board");
+  const restart = document.getElementById("restart");
+
   function update(board) {
     // display board in DOM
     for (let row = 0; row < board.length; row++) {
@@ -132,6 +134,11 @@ const GameView = (() => {
       GameController.userMove(row, col); // Delegate the user's move to the GameController
     }
   });
+
+  // start again when restart button is clicked
+  restart.addEventListener("click", () => {
+    GameController.startGame();
+  })
 
   return {update};
 })()
