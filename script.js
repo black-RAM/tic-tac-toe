@@ -93,6 +93,7 @@ const GameController = (() => {
   }
 
   function checkEndGame(board) {
+    console.log("I'm doing my job.")
     // Draw condition
     const emptyCells = Game.getEmptyCells();
     if (emptyCells.length === 0) {
@@ -111,19 +112,30 @@ Game.subscribe(GameController);
 
 // Game View
 const GameView = (() => {
+  let gameTable = document.querySelector(".board");
   function update(board) {
     // display board in DOM
-    let boardElement = document.querySelector(".board");
     for (let row = 0; row < board.length; row++) {
         for (let col = 0; col < board[row].length; col++) {
-          const cellElement = boardElement.rows[row].cells[col];
+          const cellElement = gameTable.rows[row].cells[col];
           cellElement.textContent = board[row][col] || ""; // Set the symbol or an empty string if cell is null
         }
     }
   }
+
+  // Attach the event listener for cell clicks using event delegation
+  gameTable.addEventListener("click", (event) => {
+    const target = event.target;
+    if (target.tagName === "TD") {
+      const row = target.parentElement.rowIndex;
+      const col = target.cellIndex;
+      GameController.userMove(row, col); // Delegate the user's move to the GameController
+    }
+  });
+
   return {update};
 })()
 Game.subscribe(GameView)
 
+// game flow
 GameController.startGame();
-GameController.userMove(1, 1);
