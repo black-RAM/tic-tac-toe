@@ -93,7 +93,6 @@ const GameController = (() => {
   }
 
   function checkEndGame(board) {
-    console.log("I'm doing my job.")
     // Draw condition
     const emptyCells = Game.getEmptyCells();
     if (emptyCells.length === 0) {
@@ -113,12 +112,11 @@ Game.subscribe(GameController);
 // Game View
 const GameView = (() => {
   const gameTable = document.querySelector(".board");
-  const restart = document.getElementById("restart");
 
-  function update(board) {
-    // display board in DOM
-    for (let row = 0; row < board.length; row++) {
-        for (let col = 0; col < board[row].length; col++) {
+  // display board in DOM
+  function update(board) {  
+    for (let row = 0; row < 3; row++) {
+        for (let col = 0; col < 3; col++) {
           const cellElement = gameTable.rows[row].cells[col];
           cellElement.textContent = board[row][col] || ""; // Set the symbol or an empty string if cell is null
         }
@@ -135,7 +133,8 @@ const GameView = (() => {
     }
   });
 
-  // start again when restart button is clicked
+  // PROBLEM HERE!!!
+  const restart = document.getElementById("restart");
   restart.addEventListener("click", () => {
     GameController.startGame();
   })
