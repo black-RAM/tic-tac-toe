@@ -12,6 +12,7 @@ const Game = (() => {
       }
     }
     notify();
+    console.log("I got a call!")
   }
 
   function getEmptyCells() {
@@ -41,6 +42,7 @@ const Game = (() => {
   }
 
   function notify() {
+    console.log(board);
     for (const observer of observers) {
       observer.update(board);
     }
@@ -162,15 +164,14 @@ const GameView = (() => {
     }
   });
 
+  const restart = document.getElementById("restart");
+  restart.addEventListener("click", () => {
+    GameController.startGame();
+  })
+
   return {update};
 })()
 Game.subscribe(GameView)
 
-// game flow
+// begin game
 GameController.startGame();
-
-// PROBLEM HERE!!!
-const restart = document.getElementById("restart");
-restart.addEventListener("click", () => {
-  GameController.startGame();
-})
