@@ -93,6 +93,35 @@ const GameController = (() => {
   }
 
   function checkEndGame(board) {
+    const winConditions = [
+      // Rows
+      [[0, 0], [0, 1], [0, 2]],
+      [[1, 0], [1, 1], [1, 2]],
+      [[2, 0], [2, 1], [2, 2]],
+
+      // Columns
+      [[0, 0], [1, 0], [2, 0]],
+      [[0, 1], [1, 1], [2, 1]],
+      [[0, 2], [1, 2], [2, 2]],
+
+      // Diagonals
+      [[0, 0], [1, 1], [2, 2]],
+      [[0, 2], [1, 1], [2, 0]],
+    ];
+
+    for (const condition of winConditions) {
+      const [a, b, c] = condition;
+      if ( // check is symbol is same for winning condition
+        board[a[0]][a[1]] &&
+        board[a[0]][a[1]] === board[b[0]][b[1]] &&
+        board[a[0]][a[1]] === board[c[0]][c[1]]
+      ) {
+        gameEnded = true;
+        console.log(`${currentPlayer.name} wins!`);
+        return;
+      }
+    }
+
     // Draw condition
     const emptyCells = Game.getEmptyCells();
     if (emptyCells.length === 0) {
@@ -102,7 +131,7 @@ const GameController = (() => {
   }
 
   function update(board) {
-    checkEndGame();
+    checkEndGame(board);
   }
 
   return {startGame, userMove, update};
@@ -133,15 +162,15 @@ const GameView = (() => {
     }
   });
 
-  // PROBLEM HERE!!!
-  const restart = document.getElementById("restart");
-  restart.addEventListener("click", () => {
-    GameController.startGame();
-  })
-
   return {update};
 })()
 Game.subscribe(GameView)
 
 // game flow
 GameController.startGame();
+
+// PROBLEM HERE!!!
+const restart = document.getElementById("restart");
+restart.addEventListener("click", () => {
+  GameController.startGame();
+})
