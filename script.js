@@ -119,7 +119,7 @@ const GameController = (() => {
         board[a[0]][a[1]] === board[c[0]][c[1]]
       ) {
         gameEnded = true;
-        console.log(`${currentPlayer.name} wins!`);
+        GameView.say(`${currentPlayer.name} wins!`);
         return;
       }
     }
@@ -128,7 +128,7 @@ const GameController = (() => {
     const emptyCells = Game.getEmptyCells();
     if (emptyCells.length === 0) {
       gameEnded = true;
-      console.log("It's a draw!");
+      GameView.say("It's a draw");
     }
   }
 
@@ -154,6 +154,11 @@ const GameView = (() => {
     }
   }
 
+  // Display win message
+  function say(string) {
+    document.getElementById("message").innerText = string;
+  }
+
   // Attach the event listener for cell clicks using event delegation
   gameTable.addEventListener("click", (event) => {
     const target = event.target;
@@ -164,12 +169,13 @@ const GameView = (() => {
     }
   });
 
+  // hook up restart button
   const restart = document.getElementById("restart");
   restart.addEventListener("click", () => {
     GameController.startGame();
   })
 
-  return {update};
+  return {update, say};
 })()
 Game.subscribe(GameView)
 
