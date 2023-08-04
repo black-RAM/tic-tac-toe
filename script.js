@@ -12,7 +12,7 @@ const Game = (() => {
       }
     }
     notify();
-    console.log("I got a call!")
+    console.log("I got a call!"); // logs late
   }
 
   function getEmptyCells() {
@@ -42,7 +42,7 @@ const Game = (() => {
   }
 
   function notify() {
-    console.log(board);
+    console.log(board); // logs early
     for (const observer of observers) {
       observer.update(board);
     }
