@@ -56,8 +56,8 @@ const Player = ((name, symbol, isHuman) => {
   return {name, symbol, isHuman}
 });
 
-const user = Player("Ariel", "X", true);
-const computer = Player("Computer", "O", false);
+const user = Player("The player", "X", true);
+const computer = Player("The computer", "O", false);
 
 // Game Controller
 const GameController = (() => {
