@@ -49,8 +49,6 @@ const Game = (() => {
   }
 
   function notify() {
-    console.log("Sending board...")
-    console.log(board); // logs early
     for (const observer of observers) {
       observer.update(board);
     }
@@ -63,9 +61,9 @@ const Game = (() => {
 const Player = ((name, symbol, isHuman) => {
   return {name, symbol, isHuman}
 });
-
-const user = Player("The player", "X", true);
-const computer = Player("The computer", "O", false);
+const playerName = prompt("What is your name?");
+const user = Player(playerName, "X", true);
+const computer = Player("Computer", "O", false);
 
 // Game Controller
 const GameController = (() => {
