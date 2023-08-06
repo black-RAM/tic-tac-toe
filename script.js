@@ -1,18 +1,25 @@
 const Game = (() => {
-  const board = [
+  let board = [
     [],
     [],
     []
   ];
 
   function initialiseBoard() {
+    // make sure board is clear
+    board = [
+      [],
+      [],
+      []
+    ]
+    // populate board with null
     for (const row of board) {
       for (let i = 0; i < 3; i++) {
         row.push(null);
       }
     }
+    // update observers
     notify();
-    console.log("I got a call!"); // logs late
   }
 
   function getEmptyCells() {
@@ -42,6 +49,7 @@ const Game = (() => {
   }
 
   function notify() {
+    console.log("Sending board...")
     console.log(board); // logs early
     for (const observer of observers) {
       observer.update(board);
