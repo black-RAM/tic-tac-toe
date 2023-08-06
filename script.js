@@ -75,6 +75,7 @@ const GameController = (() => {
   function startGame () {
     Game.initialiseBoard();
     currentPlayer = user;
+    gameEnded = false;
   }
 
   function userMove(row, col) {
